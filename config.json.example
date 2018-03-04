@@ -1,0 +1,16 @@
+{
+  "db": {
+    "host": "example.com",
+    "port": 3306,
+    "user": "root",
+    "password": "pass",
+    "database": "facialgo"
+  },
+  "auth": {
+    "salt": "random salt",
+    "algorithm": "sha256"
+  },
+  "network": {
+    "http-listen-port": 80
+  }
+}

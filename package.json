@@ -2,12 +2,15 @@
   "name": "facialgoserver",
   "version": "1.0.0",
   "description": "Server of the game, Facial GO",
-  "main": "index.js",
   "dependencies": {
-    "koa": "^2.5.0"
+    "koa": "^2.5.0",
+    "koa-bodyparser": "^4.2.0",
+    "koa-route": "^3.2.0",
+    "mysql": "^2.15.0"
   },
   "devDependencies": {},
   "scripts": {
+    "start": "node server.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
