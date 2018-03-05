@@ -12,5 +12,8 @@
   },
   "network": {
     "http-listen-port": 80
+  },
+  "photon_auth": {
+    "api_key": "used to check trusted server, place a random key here"
   }
 }

@@ -151,6 +151,43 @@ const user_login = {
   }
 }
 
+const photon_auth = {
+  get: async (ctx, next) => {
+    let body = ctx.request.body;
+    if ('user_id' in body && 'token' in body && 'api_key' in body) {
+      // Check if trusted
+      if (body.api_key != config.photon_auth.api_key) {
+        makeResponse(ctx.response, 200, {
+          "ResultCode": 2
+        });
+        next();
+        return;
+      }
+      
+      let sql = 'SELECT user_id, token FROM token WHERE user_id = ? AND token = ?';
+      let sqlparams = [body.user_id, body.token];
+      let dataList = dbHelper.query(sql, sqlparams);
+      if (dataList.length == 0) {
+        makeResponse(ctx.response, 200, {
+          "ResultCode": 2
+        });
+        next();
+        return;        
+      }
+
+      makeResponse(ctx.response, 200, {
+        'ResultCode': 1
+      });
+    } else {
+      makeResponse(ctx.response, 200, {
+        'ResultCode': 3
+      });
+      next();
+    }
+  }
+}
+
 app.use(route.post('/user', user.post));
 app.use(route.get('/user/:user_id', user.get));
 app.use(route.post('/user/login', user_login.post));
+app.use(route.get('/photon_auth', photon_auth.get));
