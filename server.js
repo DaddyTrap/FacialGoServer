@@ -95,7 +95,36 @@ const user = {
       }
     }
     next();
+  },
+  get: async (ctx, user_id, next) => {
+    let sql = "SELECT user_id, nickname, avatar, exp, diamond FROM user WHERE user_id = ?";
+    let sqlparams = [user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+
+    if (dataList.length == 0) {
+      makeResponse(ctx.response, 404, {
+        'status': 1,
+        "msg": "No such user"
+      });
+      next();
+    } else {
+      let user = dataList[0];
+      makeResponse(ctx.response, 200, {
+        "status": 0,
+        "msg": "Get user info success!",
+        "data": {
+          "user": user
+        }
+      });
+    }
   }
 }
 
-app.use(route.post('/user', user.post))
+const user_login = {
+  post: async (ctx, next) => {
+
+  }
+}
+
+app.use(route.post('/user', user.post));
+app.use(route.get('/user/:user_id', user.get));
