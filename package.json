@@ -4,7 +4,9 @@
   "description": "Server of the game, Facial GO",
   "dependencies": {
     "koa": "^2.5.0",
+    "koa-better-body": "^3.0.4",
     "koa-bodyparser": "^4.2.0",
+    "koa-mount": "^3.0.0",
     "koa-route": "^3.2.0",
     "mysql": "^2.15.0"
   },

@@ -1,4 +1,4 @@
-let crypto = require('crypto');
+const crypto = require('crypto');
 
 // inclusive
 const randInt = function(min, max) {

@@ -1,15 +1,12 @@
 const msyql = require("mysql");
-const fs = require('fs');
-
-let config_raw = fs.readFileSync("config.json");
-let config = JSON.parse(config_raw);
+const { CONFIG } = require('./config.js');
 
 const pool = msyql.createPool({
-  host: config.db.host,
-  port: config.db.port,
-  user: config.db.user,
-  password: config.db.password,
-  database: config.db.database
+  host: CONFIG.db.host,
+  port: CONFIG.db.port,
+  user: CONFIG.db.user,
+  password: CONFIG.db.password,
+  database: CONFIG.db.database
 });
 
 let query = function( sql, values ) {

@@ -1,0 +1,24 @@
+let CONFIG = {
+  "db": {
+    "host": "example.com",
+    "port": 3306,
+    "user": "root",
+    "password": "pass",
+    "database": "facialgo"
+  },
+  "auth": {
+    "salt": "random salt",
+    "algorithm": "sha256"
+  },
+  "network": {
+    "http-listen-port": 80
+  },
+  "photon_auth": {
+    "api_key": "used to check trusted server, place a random key here"
+  },
+  "fs": {
+    "dir_path": "/path/to/dir/"
+  }
+}
+
+module.exports = { CONFIG };
