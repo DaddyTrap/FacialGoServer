@@ -12,7 +12,30 @@ const hashPassword = function(password, algo, salt) {
   return value;
 }
 
+const ERR_RESP = {
+  4: {
+    "status": 4,
+    "msg": "server error"
+  },
+  5: {
+    "status": 5,
+    "msg": "parameters not enough"
+  },
+  6: {
+    "status": 6,
+    "msg": "please use json to request"
+  }
+}
+
+const makeResponse = function (resp, status, body) {
+  resp.type = 'json';
+  resp.status = status;
+  resp.body = body;
+}
+
 module.exports = {
   randInt,
-  hashPassword
+  hashPassword,
+  ERR_RESP,
+  makeResponse
 }
