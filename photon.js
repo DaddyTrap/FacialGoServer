@@ -1,4 +1,6 @@
 let { ERR_RESP, makeResponse } = require('./util')
+const dbHelper = require('./db-helper');
+const { CONFIG } = require('./config.js');
 
 const photon_auth = {
   get: async (ctx, next) => {

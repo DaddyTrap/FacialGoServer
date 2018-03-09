@@ -213,3 +213,118 @@ IEnumerator Upload() {
 成功返回:
 
 图片二进制数据
+
+#### GET - `/user/:user_id/friend` - 获取好友列表
+
+请求:
+
+```json
+{
+  "token": "your token"
+}
+```
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Get friend list success!",
+  "data": [
+    {
+      "user_id": 3, // friend's user_id
+      "nickname": "nickname",
+      "avatar": "avatar in url",
+      "exp": 233 // used to calculate level
+    },
+    // ...
+  ]
+}
+```
+
+失败返回:
+
+```json
+{
+  "status": 1,
+  "msg": "You can only know your friends"
+}
+```
+
+#### POST - `/user/:user_id/friend` - 添加好友
+
+请求:
+
+```json
+{
+  "user_id": "friend's id",
+  "token": "your own token"
+}
+```
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Add friend success!"
+}
+```
+
+失败返回:
+
+```json
+{
+  "status": 1,
+  "msg": "Your friend doesn't exist"
+}
+```
+
+```json
+{
+  "status": 2,
+  "msg": "You can only change your own friends"
+}
+```
+
+#### POST - `/user/:user_id/friend/:user_friend_id` - 删除好友
+
+请求:
+
+```json
+{
+  "token": "your token"
+}
+```
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Delete friend success!"
+}
+```
+
+失败返回:
+
+```json
+{
+  "status": 1,
+  "msg": "Your friend doesn't exist"
+}
+```
+
+```json
+{
+  "status": 2,
+  "msg": "You can only delete your own friends"
+}
+```
+
+```json
+{
+  "status": 3,
+  "msg": "Duplicate friendship"
+}
+```

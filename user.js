@@ -1,4 +1,7 @@
 let { ERR_RESP, makeResponse } = require('./util')
+const dbHelper = require('./db-helper');
+const { randInt, hashPassword } = require('./util');
+const { CONFIG } = require('./config.js');
 
 const user = {
   register: async (ctx, next) => {
@@ -85,7 +88,33 @@ const user = {
     });
     await next();
   },
-  post_avatar: async (ctx, user_id, next) => {
+  get: async (ctx, user_id, next) => {
+    let sql = "SELECT user_id, nickname, avatar, exp, diamond FROM user WHERE user_id = ?";
+    let sqlparams = [user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+
+    if (dataList.length == 0) {
+      makeResponse(ctx.response, 404, {
+        'status': 1,
+        "msg": "No such user"
+      });
+      await next();
+    } else {
+      let user = dataList[0];
+      makeResponse(ctx.response, 200, {
+        "status": 0,
+        "msg": "Get user info success!",
+        "data": {
+          "user": user
+        }
+      });
+      await next();
+    }
+  }
+}
+
+const user_avatar = {
+  post: async (ctx, user_id, next) => {
     if (ctx.user == null) {
       makeResponse(ctx.response, 401, {
         'status': 1,
@@ -116,36 +145,13 @@ const user = {
 
     await next();
   },
-  get_avatar: async (ctx, user_id, next) => {
+  get: async (ctx, user_id, next) => {
     let file = await fgReadFile(user_id + '.png');
     ctx.response.type = 'image/png';
     ctx.response.status = 200;
     ctx.response.body = file;
     await next();
   },
-  get: async (ctx, user_id, next) => {
-    let sql = "SELECT user_id, nickname, avatar, exp, diamond FROM user WHERE user_id = ?";
-    let sqlparams = [user_id];
-    let dataList = await dbHelper.query(sql, sqlparams);
-
-    if (dataList.length == 0) {
-      makeResponse(ctx.response, 404, {
-        'status': 1,
-        "msg": "No such user"
-      });
-      await next();
-    } else {
-      let user = dataList[0];
-      makeResponse(ctx.response, 200, {
-        "status": 0,
-        "msg": "Get user info success!",
-        "data": {
-          "user": user
-        }
-      });
-      await next();
-    }
-  }
 }
 
 const user_login = {
@@ -195,7 +201,106 @@ const user_login = {
   }
 }
 
+const user_friend = {
+  get: async (ctx, user_id, next) => {
+    if (!ctx.user || !(ctx.user.user_id == user_id)) {
+      makeResponse(ctx.response, 401, {
+        "status": 1,
+        "msg": "You can only know your friends"
+      });
+      await next();
+      return;
+    }
+    let sql = 'SELECT user.user_id, user.nickname, user.avatar, user.exp ' + 
+              'FROM user JOIN friend ON user.user_id = friend.user_friend_id ' +
+              'WHERE friend.user_id = ?';
+    let sqlparams = [user_id];
+
+    let datList = await dbHelper.query(sql, sqlparams);
+    makeResponse(ctx.response, 200, {
+      'status': 0,
+      'msg': "Get friend list success!",
+      'data': datList
+    });
+
+    await next();
+  },
+  post: async (ctx, user_id, next) => {
+    if (!ctx.user || !(ctx.user.user_id == user_id)) {
+      makeResponse(ctx.response, 401, {
+        "status": 2,
+        "msg": "You can only change your own friends"
+      });
+      await next();
+      return;
+    }
+    let body = ctx.request.fields;
+    let sql = 'SELECT user_id FROM user WHERE user_id = ?';
+    let sqlparams = [body.user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+    if (dataList.length <= 0) {
+      makeResponse(ctx.response, 404, {
+        "status": 2,
+        "msg": "You can only change your own friends"
+      })
+      await next();
+      return;
+    }
+    sql = 'SELECT user_friend_id FROM friend WHERE user_id = ? AND user_friend_id = ?';
+    sqlparams = [user_id, body.user_id];
+    dataList = await dbHelper.query(sql, sqlparams);
+    if (dataList.length > 0) {
+      makeResponse(ctx.response, 404, {
+        "status": 3,
+        "msg": "Duplicate friendship"
+      })
+      await next();
+      return;
+    }
+
+    sql = 'INSERT INTO friend (user_id, user_friend_id) VALUES (?, ?)';
+    sqlparams = [user_id, body.user_id];
+    await dbHelper.query(sql, sqlparams);
+    makeResponse(ctx.response, 200, {
+      "status": 0,
+      "msg": "Add friend success!"
+    })
+    await next();
+  },
+  delete: async (ctx, user_id, friend_id, next) => {
+    if (!ctx.user || !(ctx.user.user_id == user_id)) {
+      makeResponse(ctx.response, 401, {
+        "status": 2,
+        "msg": "You can only delete your own friends"
+      });
+      await next();
+      return;
+    }
+    let sql = 'SELECT user_id FROM friend WHERE user_id = ? AND user_friend_id = ?';
+    let sqlparams = [user_id, friend_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+    if (dataList.length <= 0) {
+      makeResponse(ctx.response, 404, {
+        "status": 1,
+        "msg": "Your friend doesn't exist"
+      })
+      await next();
+      return;
+    }
+    sql = 'DELETE FROM friend WHERE user_id = ? AND user_friend_id = ?';
+    sqlparams = [user_id, friend_id];
+    await dbHelper.query(sql, sqlparams);
+    makeResponse(ctx.response, 200, {
+      "status": 0,
+      "msg": "Delete friend success!"
+    })
+    await next();
+  }
+}
+
 module.exports = {
   user,
-  user_login
+  user_avatar,
+  user_login,
+  user_friend
 }

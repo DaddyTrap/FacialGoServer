@@ -6,7 +6,7 @@ const koaBody = require('koa-better-body');
 
 const dbHelper = require('./db-helper');
 const { randInt, hashPassword } = require('./util');
-const { user, user_login } = require('./user');
+const { user, user_login, user_avatar, user_friend } = require('./user');
 const { fgSaveFile, fgReadFile } = require('./fgfs');
 const { photon_auth } = require('./photon')
 
@@ -31,14 +31,12 @@ app.use(async (ctx, next) => {
 // auth
 app.use(mount("/user", async (ctx, next) => {
   let body = ctx.request.body || ctx.request.fields;
-  let fields = ctx.request.fields;
-  console.log(fields);
-  if (!((body && 'token' in body) || (fields && 'token' in fields))) {
+  if (!(body && 'token' in body) && !('token' in ctx.query)) {
     ctx.user = null;
     await next();
     return;
   }
-  let token_holder = body || fields;
+  let token_holder = body || ctx.query;
   let token = token_holder.token;
   let sql = 'SELECT user_id FROM token WHERE token = ?';
   let sqlparams = [token];
@@ -56,7 +54,10 @@ app.use(mount("/user", async (ctx, next) => {
 app.use(route.post('/user', user.register));
 app.use(route.get('/user/:user_id', user.get));
 app.use(route.post('/user/:user_id', user.post));
-app.use(route.post('/user/:user_id/avatar', user.post_avatar));
-app.use(route.get('/user/:user_id/avatar', user.get_avatar));
+app.use(route.post('/user/:user_id/avatar', user_avatar.post));
+app.use(route.get('/user/:user_id/avatar', user_avatar.get));
 app.use(route.post('/user/login', user_login.post));
+app.use(route.get('/user/:user_id/friend', user_friend.get));
+app.use(route.post('/user/:user_id/friend', user_friend.post));
+app.use(route.post('/user/:user_id/friend/:friend_id', user_friend.delete));
 app.use(route.get('/photon_auth', photon_auth.get));
