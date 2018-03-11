@@ -16,6 +16,7 @@ let CONFIG = {
   "photon_auth": {
     "api_key": "used to check trusted server, place a random key here"
   },
+  "photon_appid": "photon cloud app id",
   "fs": {
     "dir_path": "/path/to/dir/"
   }

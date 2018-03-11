@@ -38,6 +38,52 @@ const photon_auth = {
   }
 }
 
+const returnObject = {
+  success: {
+    'ResultCode': 0
+  },
+  proto_err: {
+    'ResultCode': 1
+  },
+  app_err: {
+    'ResultCode': 2
+  }
+}
+
+const photon_webhook = {
+  PathEvent(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+  PathClose(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+  PathCreate(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+  PathGameProperties(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+  PathJoin(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+  PathLeave(ctx, next) {
+    let body = ctx.request.body;
+    console.log(body);
+    makeResponse(ctx.response, 200, returnObject.success);
+  },
+}
+
 module.exports = {
-  photon_auth
+  photon_auth,
+  photon_webhook
 }
