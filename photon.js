@@ -4,7 +4,7 @@ const { CONFIG } = require('./config.js');
 
 const photon_auth = {
   get: async (ctx, next) => {
-    let body = ctx.request.body || ctx.request.fields;
+    let body = ctx.request.body || ctx.request.fields || ctx.query;
     if ('user_id' in body && 'token' in body && 'api_key' in body) {
       // Check if trusted
       if (body.api_key != CONFIG.photon_auth.api_key) {
@@ -55,31 +55,37 @@ const photon_webhook = {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
   PathClose(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
   PathCreate(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
   PathGameProperties(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
   PathJoin(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
   PathLeave(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
+    await next();
   },
 }
 
