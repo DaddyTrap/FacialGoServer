@@ -1,6 +1,8 @@
 let { ERR_RESP, makeResponse } = require('./util')
 const dbHelper = require('./db-helper');
 const { randInt, hashPassword } = require('./util');
+const { fgSaveFile, fgReadFile } = require('./fgfs');
+
 const { CONFIG } = require('./config.js');
 
 const user = {

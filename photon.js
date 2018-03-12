@@ -52,32 +52,32 @@ const returnObject = {
 
 const photon_webhook = {
   PathEvent(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
   PathClose(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
   PathCreate(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
   PathGameProperties(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
   PathJoin(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
   PathLeave(ctx, next) {
-    let body = ctx.request.body;
+    let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
   },
