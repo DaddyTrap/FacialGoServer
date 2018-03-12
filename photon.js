@@ -51,37 +51,37 @@ const returnObject = {
 }
 
 const photon_webhook = {
-  PathEvent(ctx, next) {
+  async PathEvent(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
-  PathClose(ctx, next) {
+  async PathClose(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
-  PathCreate(ctx, next) {
+  async PathCreate(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
-  PathGameProperties(ctx, next) {
+  async PathGameProperties(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
-  PathJoin(ctx, next) {
+  async PathJoin(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
-  PathLeave(ctx, next) {
+  async PathLeave(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
     makeResponse(ctx.response, 200, returnObject.success);
