@@ -3,8 +3,11 @@ const dbHelper = require('./db-helper');
 
 const { CONFIG } = require('./config.js');
 
-// key: value
-// invitee_id: [infos]
+// key: invitee_id
+// value: {
+//   inviter_id: inviter's id,
+//   room_id: room id
+// }
 let invitingList = {}
 
 const game = {
