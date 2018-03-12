@@ -9,6 +9,7 @@ const { randInt, hashPassword } = require('./util');
 const { user, user_login, user_avatar, user_friend } = require('./user');
 const { fgSaveFile, fgReadFile } = require('./fgfs');
 const { photon_auth, photon_webhook } = require('./photon')
+const { game } = require('./game')
 
 const app = new Koa();
 
@@ -27,9 +28,7 @@ app.use(async (ctx, next) => {
   console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
 
-
-// auth
-app.use(mount("/user", async (ctx, next) => {
+let auth = async (ctx, next) => {
   let body = ctx.request.body || ctx.request.fields;
   if (!(body && 'token' in body) && !('token' in ctx.query)) {
     ctx.user = null;
@@ -49,7 +48,11 @@ app.use(mount("/user", async (ctx, next) => {
     };
   }
   await next();
-}));
+}
+
+// auth
+app.use(mount("/user", auth));
+app.use(mount("/game", auth));
 
 app.use(route.post('/user', user.register));
 app.use(route.get('/user/:user_id', user.get));
@@ -70,3 +73,6 @@ app.use(route.post(webhook_baseurl + '/PathCreate', photon_webhook.PathCreate));
 app.use(route.post(webhook_baseurl + '/PathGameProperties', photon_webhook.PathGameProperties));
 app.use(route.post(webhook_baseurl + '/PathJoin', photon_webhook.PathJoin));
 app.use(route.post(webhook_baseurl + '/PathLeave', photon_webhook.PathLeave));
+
+app.use(route.post('/game/inviteToRoom', game.inviteToRoom));
+app.use(route.get('/game/pollInvitation', game.pollInivitation));

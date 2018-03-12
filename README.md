@@ -20,13 +20,6 @@
 }
 ```
 
-```json
-{
-  "status": 6,
-  "msg": "please use json to request"
-}
-```
-
 ### 用户 (`/user`)
 
 #### POST - `/user` - 注册
@@ -216,7 +209,7 @@ IEnumerator Upload() {
 
 #### GET - `/user/:user_id/friend` - 获取好友列表
 
-请求:
+请求(放在querystring中):
 
 ```json
 {
@@ -328,3 +321,70 @@ IEnumerator Upload() {
   "msg": "Duplicate friendship"
 }
 ```
+
+### game
+
+#### POST - `/game/inviteToRoom` - 邀请到房间
+
+请求:
+
+```json
+{
+  "token": "your token",
+  "invitee_id": "invitee's id",
+  "room_id": "the room id"
+}
+```
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Invitation sended!"
+}
+```
+
+失败返回:
+
+```json
+{
+  "status": 1,
+  "msg": "login first or request with token"
+}
+```
+
+#### GET - `/game/pollInvitation` - 轮询邀请
+
+请求(放在querystring中):
+
+```json
+{
+  "token": "your token"
+}
+```
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Get invitations success!",
+  "data": [data]
+}
+```
+
+data是一个array，其中的格式如下:
+
+```json
+"data": [
+  {
+    "inviter_id": inviter's id,
+    "room_id": room id
+  }
+]
+```
+
+失败返回:
+
+**同上**
