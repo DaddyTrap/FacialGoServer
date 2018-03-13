@@ -1,5 +1,9 @@
 # Facial Go 服务端
 
+## 吐槽
+
+这整份代码突出一个莽，对客户端持有极大的信任(即并不是所有地方都有对请求的校验)
+
 ## API
 
 `status` 字段表示成功/失败，若为 **0** 则表示成功，其他则是错误代码
@@ -388,3 +392,36 @@ data是一个array，其中的格式如下:
 失败返回:
 
 **同上**
+
+#### POST - `/game/postPhoto` - 上传照片
+
+请求:
+
+```json
+{
+  "token": "your token",
+  "room_id": "room id",
+  "stage": "game stage",
+  "photo": [ Binary Data ]
+}
+```
+
+room_id将影响存储的目录，stage将影响存储的文件名
+
+成功返回:
+
+```json
+{
+  "status": 0,
+  "msg": "Photo uploaded"
+}
+```
+
+失败返回:
+
+```json
+{
+  "status": 1,
+  "msg": "Please login first, or give your token"
+}
+```

@@ -13,7 +13,8 @@ const readFile = function (fileName) {
 
 const fgSaveFile = async (filename, file) => {
   const reader = fs.createReadStream(file.path);
-  fs.mkdirSync(CONFIG.fs.dir_path);
+  if (!fs.existsSync(CONFIG.fs.dir_path))
+    fs.mkdirSync(CONFIG.fs.dir_path);
   const stream = fs.createWriteStream(path.join(CONFIG.fs.dir_path, filename));
   reader.pipe(stream);
 };
