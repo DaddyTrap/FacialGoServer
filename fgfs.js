@@ -23,4 +23,4 @@ const fgReadFile = async (filename) => {
   return await readFile(path.join(CONFIG.fs.dir_path, filename));
 }
 
-module.exports = {fgSaveFile, fgReadFile};
+module.exports = {fgSaveFile, fgReadFile, readFile};

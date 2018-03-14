@@ -425,3 +425,34 @@ room_id将影响存储的目录，stage将影响存储的文件名
   "msg": "Please login first, or give your token"
 }
 ```
+
+#### GET - `/game/getPhoto` - 获取照片
+
+**该接口未完成**
+
+请求:
+
+```json
+{
+  "token": "your token",
+  "room_id": "room id",
+  "stage": "game stage"
+}
+```
+
+成功返回:
+
+MIME type: `image/png`
+
+body是图片二进制数据
+
+失败返回:
+
+MIME type: `json`
+
+```json
+{
+  "status": 1,
+  "msg": "No such picture"
+}
+```

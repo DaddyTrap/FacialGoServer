@@ -1,6 +1,6 @@
 let { ERR_RESP, makeResponse } = require('./util')
 const dbHelper = require('./db-helper');
-const { fgSaveFile, fgReadFile } = require('./fgfs');
+const { fgSaveFile, fgReadFile, readFile } = require('./fgfs');
 const fs = require('fs');
 const path = require('path');
 
@@ -97,7 +97,7 @@ const game = {
     }
 
     let fileDir = path.join(CONFIG.fs.dir_path, room_id);
-    let filePath = path.join(fileDir, "" + ctx.user.user_id + body.stage);
+    let filePath = path.join(fileDir, ctx.user.user_id + "-" + body.stage + ".png");
 
     if (!fs.existsSync())
       fs.mkdirSync(fileDir);
@@ -108,6 +108,49 @@ const game = {
       "status": 0,
       "msg": "Photo uploaded"
     })
+    await next();
+  },
+  async getPhoto(ctx, next) {
+    if (ctx.user == null) {
+      makeResponse(ctx.response, 401, {
+        'status': 1,
+        'msg': 'Please login first, or give your token'
+      })
+      await next();
+      return;
+    }
+    
+    let body = ctx.request.body || ctx.request.fields || ctx.request.query;
+    
+    if (!('room_id' in body && 'stage' in body)) {
+      makeResponse(ctx.response, 415, {
+        "status": 5,
+        "msg": "parameters not enough"
+      })
+      await next();
+      return;
+    }
+
+    // TODO: Check if the user is the winner
+    // TODO: Get the competitor's user id
+    let comp_user_id = -1;
+    
+    let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
+    let filePath = path.join(fileDir, comp_user_id + "-" + body.stage + ".png");
+    if (!fs.lstatSync(filePath).isFile()) {
+      makeResponse(ctx.response, 404, {
+        "status": 1,
+        "msg": "No such picture"
+      });
+      await next();
+      return;
+    }
+
+    let file = await readFile(filePath);
+    ctx.response.type = 'image/png';
+    ctx.response.status = 200;
+    ctx.response.body = file;
+
     await next();
   }
 };

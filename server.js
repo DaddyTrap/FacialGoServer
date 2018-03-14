@@ -76,3 +76,5 @@ app.use(route.post(webhook_baseurl + '/PathLeave', photon_webhook.PathLeave));
 
 app.use(route.post('/game/inviteToRoom', game.inviteToRoom));
 app.use(route.get('/game/pollInvitation', game.pollInivitation));
+app.use(route.post('/game/postPhoto', game.postPhoto));
+app.use(route.get('/game/getPhoto', game.getPhoto));
