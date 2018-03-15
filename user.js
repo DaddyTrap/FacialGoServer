@@ -148,7 +148,13 @@ const user_avatar = {
     await next();
   },
   get: async (ctx, user_id, next) => {
-    let file = await fgReadFile(user_id + '.png');
+    let file = null;
+    try {
+      file = await fgReadFile(user_id + '.png');
+    } catch (error) {
+      // use default
+      file = await fgReadFile('default.png');
+    }
     ctx.response.type = 'image/png';
     ctx.response.status = 200;
     ctx.response.body = file;
