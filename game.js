@@ -131,9 +131,22 @@ const game = {
       return;
     }
 
-    // TODO: Check if the user is the winner
-    // TODO: Get the competitor's user id
-    let comp_user_id = -1;
+    // Check if the user is the winner
+    let sql = 'SELECT * FROM `match` WHERE room_id = ? AND won_id = ?';
+    let sqlparams = [body.room_id, ctx.user.user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+    if (dataList.length <= 0) {
+      makeResponse(ctx.response, 415, {
+        "status": 2,
+        "msg": "You are not the winner of this match!"
+      });
+      await next();
+      return;
+    }
+
+    // Get the competitor's user id
+    let match_res = dataList[0];
+    let comp_user_id = (match_res.won_id == match_res.part1_id) ? match_res.part2_id : match_res.part1_id;
     
     let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
     let filePath = path.join(fileDir, comp_user_id + "-" + body.stage + ".png");

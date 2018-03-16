@@ -456,3 +456,21 @@ MIME type: `json`
   "msg": "No such picture"
 }
 ```
+
+
+### Photon
+
+该处的API使用 `PhotonNetwork.RaiseEvent` 来调用，此处只会写出 `eventCode`　和 `eventContent` 的内容。
+
+标题格式:  **动作 - $eventCode**
+
+#### 告知比赛结果 - 1
+
+eventContent:
+  Integer Array: `[$inviter_id, $invitee_id, $won_id]`
+
+例子:
+
+```C#
+PhotonNetwork.RaiseEvent(0x01, new int[] {1, 2, 1}, true, null);
+```

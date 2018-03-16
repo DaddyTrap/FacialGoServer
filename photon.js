@@ -1,6 +1,7 @@
 let { ERR_RESP, makeResponse } = require('./util')
 const dbHelper = require('./db-helper');
 const { CONFIG } = require('./config.js');
+const dbHelper = require('./db-helper')
 
 const photon_auth = {
   get: async (ctx, next) => {
@@ -54,6 +55,18 @@ const photon_webhook = {
   async PathEvent(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
+
+    let EvCode = body.EvCode;
+
+    if (EvCode == 1) { // Match Result
+      // let [part1_id, part2_id, won_id] = body.Data;
+      let room_id = body.GameId;
+      body.Data.push(room_id);
+      let sql = 'INSERT INTO `match` (part1_id, part2_id, won_id, room_id) VALUES (?,?,?,?)';
+      let sqlparams = body.Data;
+      await dbHelper.query(sql, sqlparams);
+    }
+    
     makeResponse(ctx.response, 200, returnObject.success);
     await next();
   },
