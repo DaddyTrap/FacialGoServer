@@ -52,6 +52,22 @@ const returnObject = {
 }
 
 const photon_webhook = {
+  async modifyUserAfterMatch(user_id, won_id) {
+    let sql = 'SELECT `exp`, `diamond` FROM `user` WHERE user_id = ?';
+    let sqlparams = [user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+    let user = dataList[0];
+
+    if (user_id == won_id) {
+      user.exp += 40;
+      user.diamond += 2;
+    } else {
+      user.exp += 20;
+    }
+    sql = 'UPDATE `user` SET exp = ?, diamond = ? WHERE user_id = ?';
+    sqlparams = [user.exp, user.diamond, user_id];
+    await dbHelper.query(sql, sqlparams);
+  },
   async PathEvent(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
     console.log(body);
@@ -59,12 +75,15 @@ const photon_webhook = {
     let EvCode = body.EvCode;
 
     if (EvCode == 1) { // Match Result
-      // let [part1_id, part2_id, won_id] = body.Data;
+      let [part1_id, part2_id, won_id] = body.Data;
       let room_id = body.GameId;
       body.Data.push(room_id);
       let sql = 'INSERT INTO `match` (part1_id, part2_id, won_id, room_id) VALUES (?,?,?,?)';
       let sqlparams = body.Data;
       await dbHelper.query(sql, sqlparams);
+
+      await this.modifyUserAfterMatch(part1_id, won_id);
+      await this.modifyUserAfterMatch(part2_id, won_id);
     }
     
     makeResponse(ctx.response, 200, returnObject.success);
