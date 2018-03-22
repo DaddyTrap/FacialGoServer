@@ -62,6 +62,7 @@ const game = {
     let user_id = ctx.user.user_id;
     let data = invitingList[user_id] || [];
     // 删除1分钟以上的邀请
+    // FIXME: 此处的删除并不是线程安全的
     for (let i = 0; i < data.length; ) {
       if (Date.now() - data[i].created_at > 60000) {
         data.splice(i, 1);
@@ -163,6 +164,25 @@ const game = {
     ctx.response.type = 'image/png';
     ctx.response.status = 200;
     ctx.response.body = file;
+
+    await next();
+  },
+  async deleteInvitation(ctx, user_id, next) {
+    let user = ctx.user;
+
+    if (user.user_id != user_id) {
+      makeResponse(ctx.response, 415, {
+        "status": 1,
+        "msg": "You can only delete your invitations"
+      });
+      await next();
+      return;
+    }
+    invitingList[user_id] = [];
+    makeResponse(ctx.response, 200, {
+      "status": 0,
+      "msg": "Deleted invitations"
+    });
 
     await next();
   }

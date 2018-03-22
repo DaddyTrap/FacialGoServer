@@ -112,6 +112,18 @@ const user = {
       });
       await next();
     }
+  },
+  async rank(ctx, next) {
+    let sql = "SELECT user_id, nickname, avatar, exp FROM user ORDER BY exp DESC limit 10";
+    let dataList = await dbHelper.query(sql, null);
+
+    makeResponse(ctx.response, 200, {
+      "status": 0,
+      "msg": "Query rank success!",
+      "data": dataList
+    });
+
+    await next();
   }
 }
 

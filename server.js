@@ -55,6 +55,7 @@ app.use(mount("/user", auth));
 app.use(mount("/game", auth));
 
 app.use(route.post('/user', user.register));
+app.use(route.get('/user', user.rank));
 app.use(route.get('/user/:user_id', user.get));
 app.use(route.post('/user/:user_id', user.post));
 app.use(route.post('/user/:user_id/avatar', user_avatar.post));
@@ -76,5 +77,6 @@ app.use(route.post(webhook_baseurl + '/PathLeave', photon_webhook.PathLeave));
 
 app.use(route.post('/game/inviteToRoom', game.inviteToRoom));
 app.use(route.get('/game/pollInvitation', game.pollInivitation));
+app.use(route.post('/game/deleteInvitation/:user_id', game.deleteInvitation));
 app.use(route.post('/game/postPhoto', game.postPhoto));
 app.use(route.get('/game/getPhoto', game.getPhoto));
