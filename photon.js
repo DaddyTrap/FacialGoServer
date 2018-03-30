@@ -79,6 +79,7 @@ const photon_webhook = {
       body.Data.push(room_id);
       let sql = '';
       let sqlparams = [];
+      let won_id = -1;
       if (is_won == 0) {
         // lose
         sql = 'INSERT INTO `match` (part1_id, room_id) VALUES (?,?) ON DUPLICATE KEY UPDATE `part2_id`=?'
@@ -87,6 +88,7 @@ const photon_webhook = {
         // win
         sql = 'INSERT INTO `match` (part1_id, won_id, room_id) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `part2_id`=?, `won_id`=?';
         sqlparams = [part_id, part_id, room_id, part_id, part_id];
+        won_id = part_id;
       }
       await dbHelper.query(sql, sqlparams);
 
