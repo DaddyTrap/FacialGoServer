@@ -315,6 +315,31 @@ const user_friend = {
       "msg": "Delete friend success!"
     })
     await next();
+  },
+  async rank(ctx, user_id, next) {
+    if (!ctx.user || !(ctx.user.user_id == user_id)) {
+      makeResponse(ctx.response, 401, {
+        "status": 2,
+        "msg": "You can only check your own friends' rank"
+      });
+      await next();
+      return;
+    }
+    let sql = "SELECT user.user_id, user.nickname, user.avatar, user.exp "
+            + "FROM user "
+            + "WHERE user.user_id IN "
+            + "(SELECT friend.user_friend_id FROM friend WHERE friend.user_id = ?) "
+            + "ORDER BY exp DESC limit 10";
+    let sqlparams = [user_id];
+    let dataList = await dbHelper.query(sql, sqlparams);
+
+    makeResponse(ctx.response, 200, {
+      "status": 0,
+      "msg": "Query rank success!",
+      "data": dataList
+    });
+
+    await next();
   }
 }
 

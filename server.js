@@ -62,6 +62,7 @@ app.use(route.post('/user/:user_id/avatar', user_avatar.post));
 app.use(route.get('/user/:user_id/avatar', user_avatar.get));
 app.use(route.post('/user/login', user_login.post));
 app.use(route.get('/user/:user_id/friend', user_friend.get));
+app.use(route.get('/user/:user_id/friend/rank', user_friend.rank));
 app.use(route.post('/user/:user_id/friend', user_friend.post));
 app.use(route.post('/user/:user_id/friend/:friend_id', user_friend.delete));
 app.use(route.get('/photon_auth', photon_auth.get));
