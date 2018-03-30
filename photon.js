@@ -74,15 +74,23 @@ const photon_webhook = {
     let EvCode = body.EvCode;
 
     if (EvCode == 1) { // Match Result
-      let [part1_id, part2_id, won_id] = body.Data;
+      let [part_id, is_won] = body.Data;
       let room_id = body.GameId;
       body.Data.push(room_id);
-      let sql = 'INSERT INTO `match` (part1_id, part2_id, won_id, room_id) VALUES (?,?,?,?)';
-      let sqlparams = body.Data;
+      let sql = '';
+      let sqlparams = [];
+      if (won_id == 0) {
+        // lose
+        sql = 'INSERT INTO `match` (part1_id, room_id) VALUES (?,?) ON DUPLICATE KEY UPDATE `part2_id`=?'
+        sqlparams = [part_id, room_id, part_id]
+      } else {
+        // win
+        sql = 'INSERT INTO `match` (part1_id, won_id, room_id) VALUES (?,?,?) ON DUPLICATE KEY UPDATE `part2_id`=?, `won_id`=?';
+        sqlparams = [part_id, part_id, room_id, part_id, part_id];
+      }
       await dbHelper.query(sql, sqlparams);
 
-      await this.modifyUserAfterMatch(part1_id, won_id);
-      await this.modifyUserAfterMatch(part2_id, won_id);
+      await this.modifyUserAfterMatch(part_id, won_id);
     }
     
     makeResponse(ctx.response, 200, returnObject.success);
