@@ -97,7 +97,7 @@ const game = {
       return;
     }
 
-    let fileDir = path.join(CONFIG.fs.dir_path, room_id);
+    let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
     let filePath = path.join(fileDir, ctx.user.user_id + "-" + body.stage + ".png");
 
     if (!fs.existsSync())
