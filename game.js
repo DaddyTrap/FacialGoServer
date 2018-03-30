@@ -103,7 +103,9 @@ const game = {
     if (!fs.existsSync(fileDir))
       fs.mkdirSync(fileDir);
 
-    fgSaveFile(filePath, body.photo[0]);
+    const stream = fs.createWriteStream(filePath);
+    const reader = fs.createReadStream(body.photo[0]);
+    reader.pipe(stream);
 
     makeResponse(ctx.response, 200, {
       "status": 0,
