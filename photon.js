@@ -92,11 +92,10 @@ const photon_webhook = {
       }
       await dbHelper.query(sql, sqlparams);
 
-      await this.modifyUserAfterMatch(part_id, won_id);
+      await photon_webhook.modifyUserAfterMatch(part_id, won_id);
+      makeResponse(ctx.response, 200, returnObject.success);
+      await next();
     }
-    
-    makeResponse(ctx.response, 200, returnObject.success);
-    await next();
   },
   async PathClose(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
