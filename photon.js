@@ -79,7 +79,7 @@ const photon_webhook = {
       body.Data.push(room_id);
       let sql = '';
       let sqlparams = [];
-      if (won_id == 0) {
+      if (is_won == 0) {
         // lose
         sql = 'INSERT INTO `match` (part1_id, room_id) VALUES (?,?) ON DUPLICATE KEY UPDATE `part2_id`=?'
         sqlparams = [part_id, room_id, part_id]
