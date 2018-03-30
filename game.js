@@ -104,7 +104,7 @@ const game = {
       fs.mkdirSync(fileDir);
 
     const stream = fs.createWriteStream(filePath);
-    const reader = fs.createReadStream(body.photo[0]);
+    const reader = fs.createReadStream(body.photo[0].path);
     reader.pipe(stream);
 
     makeResponse(ctx.response, 200, {
