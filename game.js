@@ -100,10 +100,10 @@ const game = {
     let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
     let filePath = path.join(fileDir, ctx.user.user_id + "-" + body.stage + ".png");
 
-    if (!fs.existsSync())
+    if (!fs.existsSync(fileDir))
       fs.mkdirSync(fileDir);
 
-    fgSaveFile("" + ctx.user.user_id + body.stage, body.photo[0]);
+    fgSaveFile(filePath, body.photo[0]);
 
     makeResponse(ctx.response, 200, {
       "status": 0,
