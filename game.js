@@ -150,6 +150,7 @@ const game = {
     // Get the competitor's user id
     let match_res = dataList[0];
     let comp_user_id = (match_res.won_id == match_res.part1_id) ? match_res.part2_id : match_res.part1_id;
+    if (match_res == null) comp_user_id = match_res.part1_id;
     
     let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
     let filePath = path.join(fileDir, comp_user_id + "-" + body.stage + ".png");
