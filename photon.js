@@ -69,13 +69,14 @@ const photon_webhook = {
   },
   async PathEvent(ctx, next) {
     let body = ctx.request.body || ctx.request.fields;
-    console.log(body);
+    // console.log(body);
 
     let EvCode = body.EvCode;
 
     if (EvCode == 1) { // Match Result
       let [part_id, is_won] = body.Data;
       let room_id = body.GameId;
+      console.log(`Room ${room_id}: ${part_id} ${is_won ? 'won' : 'lost'}`);
       body.Data.push(room_id);
       let sql = '';
       let sqlparams = [];
