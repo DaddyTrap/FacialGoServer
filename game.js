@@ -135,8 +135,8 @@ const game = {
     }
 
     // Check if the user is the winner
-    let sql = 'SELECT * FROM `match` WHERE room_id = ? AND won_id = ?';
-    let sqlparams = [body.room_id, ctx.user.user_id];
+    let sql = 'SELECT * FROM `match` WHERE room_id = ?';
+    let sqlparams = [body.room_id];
     let dataList = await dbHelper.query(sql, sqlparams);
     if (dataList.length <= 0) {
       makeResponse(ctx.response, 415, {
@@ -150,7 +150,9 @@ const game = {
     // Get the competitor's user id
     let match_res = dataList[0];
     let comp_user_id = (match_res.won_id == match_res.part1_id) ? match_res.part2_id : match_res.part1_id;
-    if (match_res.won_id == null) comp_user_id = match_res.part1_id;
+    if (match_res.part2_id == null) comp_user_id = match_res.part1_id;
+    //console.log(`this user: ${user.user_id}, comp_user_id: ${comp_user_id}`);
+    console.log(`part1_id: ${match_res.part1_id}, part2_id: ${match_res.part2_id}, won_id: ${match_res.won_id}`);
     
     let fileDir = path.join(CONFIG.fs.dir_path, body.room_id);
     let filePath = path.join(fileDir, comp_user_id + "-" + body.stage + ".png");
