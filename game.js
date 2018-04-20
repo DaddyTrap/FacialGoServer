@@ -1,5 +1,3 @@
-import { read } from 'fs';
-
 let { ERR_RESP, makeResponse } = require('./util')
 const dbHelper = require('./db-helper');
 const { fgSaveFile, fgReadFile, readFile } = require('./fgfs');
