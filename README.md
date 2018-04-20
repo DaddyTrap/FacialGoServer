@@ -428,8 +428,6 @@ room_id将影响存储的目录，stage将影响存储的文件名
 
 #### GET - `/game/getPhoto` - 获取照片
 
-**该接口未完成**
-
 请求:
 
 ```json
@@ -467,7 +465,7 @@ MIME type: `json`
 #### 告知比赛结果 - 1
 
 eventContent:
-  Integer Array: `[$inviter_id, $invitee_id, $won_id]`
+  Integer Array: `[$player_id, $is_won]`
 
 例子:
 

@@ -1,8 +1,13 @@
+import { read } from 'fs';
+
 let { ERR_RESP, makeResponse } = require('./util')
 const dbHelper = require('./db-helper');
 const { fgSaveFile, fgReadFile, readFile } = require('./fgfs');
 const fs = require('fs');
 const path = require('path');
+
+const sharp = require('sharp');
+const request = require('request');
 
 const { CONFIG } = require('./config.js');
 
@@ -107,6 +112,10 @@ const game = {
     const reader = fs.createReadStream(body.photo[0].path);
     reader.pipe(stream);
 
+    reader.once('finish', ()=>{
+      this.processPhoto(filePath);
+    });
+
     makeResponse(ctx.response, 200, {
       "status": 0,
       "msg": "Photo uploaded"
@@ -190,6 +199,39 @@ const game = {
     });
 
     await next();
+  },
+  async processPhoto(file_path) {
+    let formData = {
+      api_key: CONFIG.api.api_key,
+      api_secret: CONFIG.api.api_secret,
+      image_file: fs.createWriteStream(file_path)
+    };
+    return new Promise((resolve, reject)=>{
+      request.post({
+        url: 'https://api-cn.faceplusplus.com/facepp/v3/detect',
+        formData
+      }, (error, response, body)=>{
+        if(error){
+          console.log(error)
+        }
+
+        if (body === undefined){
+
+        } else {
+          res = JSON.parse(body);
+          var one_face = res.faces[0].face_rectangle;
+          console.log(one_face);
+          console.log(one_face.width);
+          sharp(file_path)
+            .extract({ left: one_face.left, top: one_face.top, width: one_face.width, height: one_face.height })
+            .rotate(-90)
+            .toFile(file_path, function(err) {
+              console.log(err);
+            });
+        }
+        resolve();
+      });
+    });
   }
 };
 
